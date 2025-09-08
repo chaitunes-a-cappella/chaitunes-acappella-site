@@ -24,7 +24,11 @@ export default function RootLayout({
       <body>
         <Navbar />
         <div
-          className="xl:h-[calc(100vh-184px)] lg:h-[calc(100vh-155px)] md:h-[calc(100vh-124px)] h-[calc(100vh-100px)] flex flex-col bg-no-repeat bg-cover bg-center text-gray-900 m-0 p-0 w-full"
+          className="xl:min-h-[calc(100vh-190px)] 
+            lg:min-h-[calc(100vh-155px)] 
+            md:min-h-[calc(100vh-124px)] 
+            min-h-[calc(100vh-100px)] 
+            flex flex-col bg-no-repeat bg-cover bg-center text-gray-900 m-0 p-0 w-full"
           style={{
             backgroundImage: "url('/background.png')",
             backgroundRepeat: "no-repeat",
@@ -37,3 +41,4 @@ export default function RootLayout({
     </html>
   );
 }
+

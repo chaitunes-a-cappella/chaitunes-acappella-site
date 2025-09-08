@@ -10,6 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@tailwindcss/postcss": "^4.1.12",
     "lucide-react": "^0.540.0",
     "next": "^15.4.6",
