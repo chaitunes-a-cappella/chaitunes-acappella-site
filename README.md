@@ -1,6 +1,6 @@
 # ChaiTunes Website
 
-Welcome to the **ChaiTunes** website repository! This site is the official hub for the ChaiTunes a cappella group, showcasing information about the group, mission, and members.
+Welcome to the **ChaiTunes** website repository! This site is the official hub for the website for ChaiTunes A Cappella at Emory University, showcasing information about the group, mission, and members.
 
 ## Features
 - **Home/About page** with group introduction and mission 
