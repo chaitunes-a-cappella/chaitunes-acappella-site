@@ -55,7 +55,6 @@ export default function Navbar() {
                     <Link href="/" className="hover:text-[#b1dff8]">HOME</Link>
                     <Link href="/about" className="hover:text-[#b1dff8]">ABOUT</Link>
                     <Link href="/members" className="hover:text-[#b1dff8]">MEMBERS</Link>
-                    <Link href="/repertoire" className="hover:text-[#b1dff8]">REPERTOIRE</Link>
                     <Link href="/contact" className="hover:text-[#b1dff8]">CONTACT</Link>
                 </div>
             </div>
@@ -80,7 +79,6 @@ export default function Navbar() {
                 <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-[#b1dff8]">HOME</Link>
                 <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-[#b1dff8]">ABOUT</Link>
                 <Link href="/members" onClick={() => setIsOpen(false)} className="hover:text-[#b1dff8]">MEMBERS</Link>
-                <Link href="/repertoire" onClick={() => setIsOpen(false)} className="hover:text-[#b1dff8]">REPERTOIRE</Link>
                 <Link href="/contact" onClick={() => setIsOpen(false)} className="hover:text-[#b1dff8]">CONTACT</Link>
             </div>
 
