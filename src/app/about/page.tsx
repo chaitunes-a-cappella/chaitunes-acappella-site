@@ -1,8 +1,13 @@
 import { Montserrat } from "next/font/google";
 import { FaInstagram, FaFacebookF, FaTiktok } from "react-icons/fa";
+import type { Metadata } from "next";
 
 const montserrat500 = Montserrat({ subsets: ["latin"], weight: "500" });
 const montserrat600 = Montserrat({ subsets: ["latin"], weight: "600" });
+
+export const metadata: Metadata = {
+    title: "About",
+};
 
 export default function About() {
     return (
