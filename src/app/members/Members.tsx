@@ -24,7 +24,9 @@ export default function Members({ fontClass1, fontClass2 }: Props) {
         'Music Director': 2,
         'Assistant Music Director': 3,
         'Treasurer': 4,
-        'Social Chair': 5,
+        'Social Chair/Secretary': 5,
+        'Social Chair': 6,
+        'Secretary': 7,
     };
 
     async function fetchMembers() {

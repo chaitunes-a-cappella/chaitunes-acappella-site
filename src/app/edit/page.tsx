@@ -5,13 +5,32 @@ import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
 import type { Member } from '../types/member';
 import type { Alumni } from '../types/alumni';
+import EditGroupPhoto from "../components/EditGroupPhoto";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+const positions = [
+    "",
+    "President",
+    "Music Director",
+    "Assistant Music Director",
+    "Treasurer",
+    "Social Chair",
+    "Secretary",
+    "Social Chair/Secretary",
+]
+
 export default function EditPage() {
+    {/* Login variables} */ }
+    const [user, setUser] = useState<unknown>(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loginError, setLoginError] = useState('');
+
+    {/* State variables */ }
     const [alumni, setAlumni] = useState<Alumni[]>([]);
     const [members, setMembers] = useState<Member[]>([]);
 
@@ -31,6 +50,28 @@ export default function EditPage() {
     const editImageFileInputRef = useRef<HTMLInputElement>(null);
 
     const montserrat = { className: "font-montserrat" };
+
+    useEffect(() => {
+        const getSession = async () => {
+            const {
+                data: { session },
+            } = await supabase.auth.getSession();
+
+            setUser(session?.user ?? null);
+        };
+
+        getSession();
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
 
     useEffect(() => {
         fetchData();
@@ -265,8 +306,78 @@ export default function EditPage() {
         }
     }
 
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoginError('');
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            console.error("Login failed:", error.message);
+            setLoginError("Invalid email or password.");
+        } else {
+            setUser(data.user);
+            setEmail('');
+            setPassword('');
+        }
+    };
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setUser(null);
+    };
+
+    if (!user) {
+        return (
+            <div className="text-[#f0ede7] mt-20 mb-32 px-6">
+                <form
+                    onSubmit={handleLogin}
+                    className="bg-chai-dark-blue shadow-md rounded-lg p-6 max-w-md mx-auto flex flex-col gap-4"
+                >
+                    <h2 className="text-4xl font-semibold mb-4 text-center text-chai-light-blue">Admin Login</h2>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-chai-dark-blue border border-chai-light-blue p-3 rounded"
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="bg-chai-dark-blue border border-chai-light-blue p-3 rounded"
+                        required
+                    />
+                    {loginError && <p className="text-red-500">{loginError}</p>}
+                    <button
+                        type="submit"
+                        className="bg-chai-light-blue text-chai-dark-blue font-semibold py-3 rounded"
+                    >
+                        Login
+                    </button>
+                </form>
+            </div>
+        );
+    }
+
     return (
         <div className="text-[#f0ede7] mt-20 mb-32 px-6 space-y-24">
+            <div className="max-w-3xl mr-auto flex justify-end -mb-10">
+                <button
+                    onClick={handleLogout}
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded"
+                >
+                    Sign Out
+                </button>
+            </div>
+            {/* Edit Group Photo Section */}
+            <EditGroupPhoto />
             {/* Members Section */}
             <form
                 onSubmit={handleMemberSubmit}
@@ -300,13 +411,25 @@ export default function EditPage() {
                     required
                     className="bg-chai-dark-blue border border-chai-light-blue p-3 rounded"
                 />
-                <input
-                    type="text"
-                    placeholder="Position (optional)"
-                    value={newMember.position || ""}
-                    onChange={(e) => setNewMember({ ...newMember, position: e.target.value })}
-                    className="bg-chai-dark-blue border border-chai-light-blue p-3 rounded"
-                />
+                <div className="relative w-full">
+                    <select
+                        value={newMember.position || ""}
+                        onChange={(e) => setNewMember({ ...newMember, position: e.target.value })}
+                        className="bg-chai-dark-blue border border-chai-light-blue text-white p-3 pr-10 rounded w-full appearance-none"
+                    >
+                        {positions.map((option) => (
+                            <option key={option} value={option}>
+                                {option === "" ? "Select Position (optional)" : option}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Custom arrow */}
+                    <div className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-white text-sm">
+                        ▼
+                    </div>
+                </div>
+
                 <input
                     type="file"
                     accept="image/*"
@@ -323,28 +446,45 @@ export default function EditPage() {
                             <li key={m.key} className="space-y-2">
                                 <input
                                     type="text"
+                                    placeholder="First Name"
                                     value={editMember.first_name}
                                     onChange={(e) => setEditMember({ ...editMember, first_name: e.target.value })}
                                     className="bg-chai-dark-blue border p-2 rounded w-full"
                                 />
                                 <input
                                     type="text"
+                                    placeholder="Last Name"
                                     value={editMember.last_name}
                                     onChange={(e) => setEditMember({ ...editMember, last_name: e.target.value })}
                                     className="bg-chai-dark-blue border p-2 rounded w-full"
                                 />
-                                <input
-                                    type="text"
-                                    value={editMember.position || ""}
-                                    onChange={(e) => setEditMember({ ...editMember, position: e.target.value })}
-                                    className="bg-chai-dark-blue border p-2 rounded w-full"
-                                />
+                                <div className="relative w-full">
+                                    <select
+                                        value={editMember.position || ""}
+                                        onChange={(e) => setEditMember({ ...editMember, position: e.target.value })}
+                                        className="bg-chai-dark-blue border p-2 pr-10 rounded w-full appearance-none text-white"
+                                    >
+                                        {positions.map((option) => (
+                                            <option key={option} value={option}>
+                                                {option === "" ? "Select Position (optional)" : option}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    {/* Custom dropdown arrow */}
+                                    <div className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-white text-sm">
+                                        ▼
+                                    </div>
+                                </div>
+
+
                                 <input
                                     type="number"
+                                    placeholder="Year"
                                     value={editMember.year}
                                     onChange={(e) => {
                                         const val = parseInt(e.target.value);
-                                        setEditMember({ ...editMember, year: isNaN(val) ? undefined : val });
+                                        setEditMember({ ...editMember, year: val });
                                     }}
                                     className="bg-chai-dark-blue border p-2 rounded w-full"
                                     required
@@ -436,7 +576,7 @@ export default function EditPage() {
                                     value={editAlumnus.year}
                                     onChange={(e) => {
                                         const val = parseInt(e.target.value);
-                                        setEditAlumnus({ ...editAlumnus, year: isNaN(val) ? undefined : val });
+                                        setEditAlumnus({ ...editAlumnus, year: val });
                                     }}
                                     className="bg-chai-dark-blue border p-2 rounded w-full"
                                     required
