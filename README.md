@@ -9,8 +9,8 @@ Welcome to the **ChaiTunes** website repository! This site is the official hub f
 - **Easy-to-update content** via Supabase backend  
 
 ## Technologies
-- **Frontend:** React, Tailwind CSS  
-- **Backend:** Supabase (for data storage and authentication)  
+- **Frontend:** Next.js, Tailwind CSS  
+- **Backend:** Supabase (for data storage and authentication), EmailJS (for contacting the group directly through the site)
 - **Deployment:** Vercel  
 - **Version Control:** Git and GitHub  
 
