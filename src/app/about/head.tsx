@@ -4,6 +4,7 @@ export default function Head() {
             <link rel="preload" href="/background.png" as="image" />
             <link rel="preload" href="/favicon.png" as="image" />
             <link rel="preload" href="/professional_background.jpg" as="image" />
+            <link rel="icon" href="/favicon.png" />
         </>
     )
 }
