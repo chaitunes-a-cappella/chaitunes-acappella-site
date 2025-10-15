@@ -8,6 +8,7 @@ import Members from "./Members";
 
 export const metadata = {
     title: "Members",
+    icons: { icon: "/favicon.png" },
 };
 
 export default function MembersPage() {

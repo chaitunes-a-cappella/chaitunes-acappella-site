@@ -6,6 +6,7 @@ const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Contact",
+    icons: { icon: "/favicon.png" },
 };
 
 export default function Contact() {
