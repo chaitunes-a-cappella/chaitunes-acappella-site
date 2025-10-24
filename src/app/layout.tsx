@@ -10,7 +10,12 @@ export const metadata: Metadata = {
   description:
     "The official website for ChaiTunes A Cappella at Emory University",
   icons: {
-    icon: "/favicon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: { url: "/apple-touch-icon.png" },
   },
 };
 
