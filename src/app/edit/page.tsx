@@ -273,6 +273,37 @@ export default function EditPage() {
         fetchData();
     }
 
+    async function makeAlumnusFromMember(member: Member) {
+        // Ensure required fields exist
+        if (!member.first_name || !member.last_name || !member.year) {
+            console.error("Member missing required fields, skipping make-alumni.");
+            return;
+        }
+
+        const payload: Partial<Alumni> = {
+            first_name: member.first_name,
+            last_name: member.last_name,
+            year: member.year,
+        };
+
+        // Insert into alumni
+        const { error: insertError } = await supabase.from("alumni").insert(payload);
+        if (insertError) {
+            console.error("Error inserting alumnus:", insertError);
+            return;
+        }
+
+        // Remove from members table
+        const { error: deleteError } = await supabase.from("members").delete().eq("key", member.key);
+        if (deleteError) {
+            console.error("Error deleting member after making alumnus:", deleteError);
+            // We don't attempt to rollback the alumnus insert here; surface the error in console
+        }
+
+        // Refresh lists to reflect changes
+        fetchData();
+    }
+
 
 
     async function saveAlumnusEdit(id: number) {
@@ -512,6 +543,7 @@ export default function EditPage() {
                                 </div>
                                 <div className="flex gap-2">
                                     <button onClick={() => setEditMember(m)} type="button" className="text-blue-400 hover:underline">Edit</button>
+                                    <button onClick={() => makeAlumnusFromMember(m)} type="button" className="text-yellow-300 hover:underline">Make Alumni</button>
                                     <button onClick={() => deleteMember(m.key)} type="button" className="text-red-400 hover:underline">Delete</button>
                                 </div>
                             </li>
